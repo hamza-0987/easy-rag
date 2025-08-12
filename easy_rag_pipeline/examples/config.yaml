@@ -1,12 +1,31 @@
 # Configuration for the Easy RAG Pipeline
 
-# LLM settings
+# --- LLM settings ---
+# Select your LLM provider and model.
+# The corresponding API key will be loaded from your .env file.
 llm:
   provider: "openai"
   model: "gpt-4o-mini"
   temperature: 0.7
 
-# Embedding model settings
+# --- Example configuration for other providers ---
+# llm:
+#   provider: "groq"
+#   model: "llama3-8b-8192"
+#   temperature: 0.7
+#
+# llm:
+#   provider: "gemini"
+#   model: "gemini-1.5-flash"
+#   temperature: 0.7
+#
+# llm:
+#   provider: "openrouter"
+#   model: "anthropic/claude-3.5-sonnet"
+#   temperature: 0.7
+
+
+# --- Embedding model settings ---
 embedding:
   provider: "openai"
   model: "text-embedding-3-small"
@@ -14,21 +33,30 @@ embedding:
   # provider: "huggingface"
   # model: "sentence-transformers/all-MiniLM-L6-v2"
 
-# Vector store settings
+
+# --- Vector store settings ---
 vector_store:
   provider: "faiss"
   # To be added: chroma, pinecone, etc.
 
-# Ingestion and chunking settings
+
+# --- Ingestion and chunking settings ---
 chunking:
   chunk_size: 1000
   chunk_overlap: 100
 
-# Retrieval settings
+
+# --- Retrieval settings ---
 retrieval:
   k: 5 # Number of documents to retrieve
 
-# API keys - these are best set in a .env file
-# The config loader will automatically pick them up
-api_keys:
-  openai: "YOUR_OPENAI_API_KEY" # Loaded from OPENAI_API_KEY environment variable if present
+
+# --- API keys ---
+# API keys are loaded automatically from environment variables based on the provider selected.
+# See .env.example for the required variable names.
+# You can override them here, but it's not recommended for security reasons.
+# api_keys:
+#   openai: "YOUR_OPENAI_API_KEY"
+#   groq: "YOUR_GROQ_API_KEY"
+#   gemini: "YOUR_GOOGLE_API_KEY"
+#   openrouter: "YOUR_OPENROUTER_API_KEY"

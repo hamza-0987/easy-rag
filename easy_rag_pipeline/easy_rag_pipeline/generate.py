@@ -1,4 +1,6 @@
 from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
@@ -10,24 +12,40 @@ def generate_answer(query: str, docs: list, llm_config: dict):
         query (str): The user's original query.
         docs (list): A list of retrieved documents to use as context.
         llm_config (dict): Configuration for the LLM.
-            Example for OpenAI:
-            {
-                "provider": "openai",
-                "model": "gpt-4o-mini",
-                "api_key": "...",
-                "temperature": 0.7
-            }
 
     Returns:
         str: The generated answer.
     """
     provider = llm_config.get("provider", "openai").lower()
+    model_name = llm_config.get("model")
+    api_key = llm_config.get("api_key")
+    temperature = llm_config.get("temperature", 0.7)
 
     if provider == "openai":
         llm = ChatOpenAI(
-            model=llm_config.get("model", "gpt-4o-mini"),
-            openai_api_key=llm_config.get("api_key"),
-            temperature=llm_config.get("temperature", 0.7)
+            model=model_name,
+            openai_api_key=api_key,
+            temperature=temperature
+        )
+    elif provider == "openrouter":
+        llm = ChatOpenAI(
+            model=model_name,
+            openai_api_key=api_key,
+            base_url="https://openrouter.ai/api/v1",
+            temperature=temperature
+        )
+    elif provider == "groq":
+        llm = ChatGroq(
+            model=model_name,
+            groq_api_key=api_key,
+            temperature=temperature
+        )
+    elif provider == "gemini":
+        llm = ChatGoogleGenerativeAI(
+            model=model_name,
+            google_api_key=api_key,
+            temperature=temperature,
+            convert_system_message_to_human=True # Gemini needs this
         )
     else:
         raise ValueError(f"Unsupported LLM provider: {provider}")

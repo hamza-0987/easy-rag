@@ -9,6 +9,8 @@ setup(
         "langchain-core",
         "langchain-openai",
         "langchain-community",
+        "langchain-groq",
+        "langchain-google-genai",
         "faiss-cpu",
         "pypdf",
         "tiktoken",
