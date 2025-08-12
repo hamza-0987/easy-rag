@@ -1,0 +1,8 @@
+Retrieval-Augmented Generation (RAG) is a technique that enhances the accuracy and reliability of Large Language Models (LLMs).
+It works by grounding the model on external knowledge sources to supplement the LLM's internal, parametric memory.
+The process involves two main phases: retrieval and generation.
+First, given a user's query, the system retrieves relevant documents or passages from a large corpus. This corpus can be a collection of text files, a database, or a knowledge base.
+The retrieved information is then passed as context to the LLM along with the original query.
+Finally, the LLM generates an answer based on both its internal knowledge and the provided context.
+This approach helps to reduce hallucinations and allows the model's knowledge to be updated easily by simply updating the external data source.
+FAISS (Facebook AI Similarity Search) is a popular library for efficient similarity search and clustering of dense vectors, making it ideal for the retrieval step in RAG pipelines.

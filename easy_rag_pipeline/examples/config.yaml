@@ -1,0 +1,34 @@
+# Configuration for the Easy RAG Pipeline
+
+# LLM settings
+llm:
+  provider: "openai"
+  model: "gpt-4o-mini"
+  temperature: 0.7
+
+# Embedding model settings
+embedding:
+  provider: "openai"
+  model: "text-embedding-3-small"
+  # To use a local model with HuggingFace:
+  # provider: "huggingface"
+  # model: "sentence-transformers/all-MiniLM-L6-v2"
+
+# Vector store settings
+vector_store:
+  provider: "faiss"
+  # To be added: chroma, pinecone, etc.
+
+# Ingestion and chunking settings
+chunking:
+  chunk_size: 1000
+  chunk_overlap: 100
+
+# Retrieval settings
+retrieval:
+  k: 5 # Number of documents to retrieve
+
+# API keys - these are best set in a .env file
+# The config loader will automatically pick them up
+api_keys:
+  openai: "YOUR_OPENAI_API_KEY" # Loaded from OPENAI_API_KEY environment variable if present

@@ -1,0 +1,20 @@
+# Core RAG and LangChain
+langchain
+langchain-core
+langchain-openai
+langchain-community
+faiss-cpu
+pypdf
+tiktoken
+
+# Configuration
+pyyaml
+python-dotenv
+
+# App
+streamlit
+
+# For development
+black
+flake8
+pytest
