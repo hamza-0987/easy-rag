@@ -8,6 +8,7 @@ langchain-google-genai
 faiss-cpu
 pypdf
 tiktoken
+sentence-transformers
 
 # Configuration
 pyyaml

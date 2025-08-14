@@ -11,23 +11,25 @@ def main():
     A basic example demonstrating the use of the simple_rag_pipeline.
 
     Usage:
-    1. Make sure you have an OpenAI API key set in a .env file in the root directory.
-       (e.g., OPENAI_API_KEY="sk-...")
-    2. Run this script from the root directory:
+    1. Make sure you have an API key set in a .env file in the root directory.
+    2. Run this script from the project root directory:
        python examples/basic_rag.py
     """
     # Setup logging
     logger = setup_logging()
 
     # Load configuration
-    # Assumes config.yaml is in the same directory as this script
     config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
     config = load_config(config_path)
     logger.info("Configuration loaded successfully.")
 
     # Check for API key
-    if not config.get('api_keys', {}).get('openai'):
-        logger.error("OpenAI API key not found. Please set it in your .env file.")
+    if not config.get('llm', {}).get('api_key'):
+        provider = config.get('llm', {}).get('provider', 'the selected provider')
+        key_env_var = f"{provider.upper()}_API_KEY"
+        if provider == 'gemini':
+            key_env_var = 'GOOGLE_API_KEY'
+        logger.error(f"API key for provider '{provider}' not found. Please set {key_env_var} in your .env file.")
         return
 
     # Define the source document and the query
