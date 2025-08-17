@@ -1,8 +1,8 @@
-from .ingest import chunk_documents, load_pdf, load_website, load_text
+from .ingest import chunk_documents, load_pdf, load_website, load_text, load_images_from_directory
 from .embed import get_embedding_function
-from .store import create_vector_store
+from .store import create_vector_store, create_multi_vector_retriever
 from .retrieve import retrieve_documents
-from .generate import generate_answer
+from .generate import generate_answer, generate_multimodal_answer
 import os
 
 # A more practical approach is to separate indexing from querying.
@@ -65,6 +65,63 @@ def query_rag_pipeline(query: str, vector_store, config: dict):
 
     print("Generating answer...")
     answer = generate_answer(query, retrieved_docs, config['llm'])
+
+    return answer
+
+
+def multimodal_rag_pipeline(query: str, text_source_path: str, image_directory_path: str, config: dict):
+    """
+    An all-in-one multimodal RAG pipeline.
+
+    Args:
+        query (str): The user's query.
+        text_source_path (str): Path to the text document.
+        image_directory_path (str): Path to the directory of images.
+        config (dict): The main configuration dictionary.
+
+    Returns:
+        str: The generated answer.
+    """
+    if not config.get("multimodal", {}).get("enabled", False):
+        raise ValueError("Multimodal mode is not enabled in the configuration.")
+
+    print("Executing Multimodal RAG Pipeline...")
+
+    # 1. Load text and image documents
+    print("1. Loading documents...")
+    text_docs = load_text(text_source_path)
+    image_docs = load_images_from_directory(image_directory_path)
+
+    # 2. Chunk text documents
+    print("2. Chunking text documents...")
+    text_chunks = chunk_documents(text_docs, **config.get('chunking', {}))
+
+    # 3. Create embedding functions
+    # For this example, we'll use the same text embedding model for images,
+    # as specified in the config. A true multimodal setup might use a dedicated
+    # image embedding model.
+    print("3. Creating embedding functions...")
+    text_embedding_fn = get_embedding_function(config['embedding'])
+    image_embedding_fn = get_embedding_function(config['embedding']) # Placeholder
+
+    # 4. Create Multi-Vector Retriever
+    print("4. Creating Multi-Vector Retriever...")
+    retriever = create_multi_vector_retriever(
+        text_docs=text_chunks,
+        image_docs=image_docs,
+        text_embedding_fn=text_embedding_fn,
+        image_embedding_fn=image_embedding_fn,
+        llm_config=config['llm'],
+        store_config=config['vector_store']
+    )
+
+    # 5. Retrieve documents
+    print("5. Retrieving relevant documents...")
+    retrieved_docs = retriever.invoke(query)
+
+    # 6. Generate multimodal answer
+    print("6. Generating multimodal answer...")
+    answer = generate_multimodal_answer(query, retrieved_docs, config['llm'])
 
     return answer
 

@@ -31,42 +31,39 @@
 - **🔌 Pluggable Architecture**: Easily switch between LLMs (**OpenAI, Groq, Gemini, OpenRouter**), embedding models (**OpenAI, HuggingFace**), and vector stores (**FAISS**).
 - **⚙️ Configuration-Driven**: No hard-coding. Manage all your settings—from chunk sizes to model names—through a single `config.yaml` file.
 - **🚀 Efficient & Practical**: Includes two pipeline modes: a simple all-in-one for quick demos, and an advanced two-step process (index then query) for production efficiency.
-- **📚 Multi-Format Ingestion**: Out-of-the-box support for loading documents from PDFs, text files, and websites.
-- **📦 Ready-to-Use**: Comes with a CLI example and an interactive Streamlit demo to get you started in minutes.
+- **🖼️ Multimodal Ready**: Process and reason over both text and images. The pipeline can ingest images, create text summaries of them, and use both in its context.
+- **📚 Multi-Format Ingestion**: Out-of-the-box support for loading documents from PDFs, text files, websites, and now images.
+- **📦 Ready-to-Use**: Comes with a CLI example, a Streamlit demo, and a multimodal example to get you started quickly.
 - **🔧 Extensible by Design**: Clean, modular code that's easy to extend with your own custom components.
 
 ## 🏗️ Architecture
 
-The pipeline follows a standard, modular RAG architecture that is easy to understand and build upon.
+The pipeline uses a multi-vector retriever strategy for handling multimodal data. Text is chunked, while images are summarized. Both the raw text and the image summaries are embedded and used for retrieval.
 
 ```
-[Source Document: PDF, TXT, URL]
-             |
-             v
-      [1. Ingest & Load]
-             |
-             v
-      [2. Chunk Documents]
-             |
-             v
-      [3. Generate Embeddings]  <-- (Pluggable: OpenAI, HuggingFace)
-             |
-             v
-      [4. Store in Vector DB]   <-- (Pluggable: FAISS)
-             |
-             +-----------------------+
-             |                       |
-             v                       v
-[User Query] -> [5. Retrieve Docs]  [Vector Database]
-             |
-             v
-[Retrieved Context + Query]
-             |
-             v
-      [6. Generate Answer]      <-- (Pluggable: OpenAI, Groq, Gemini)
-             |
-             v
-         [Answer]
+[Text Docs]--+      +--[Image Docs]
+     |       |      |       |
+     v       |      v       v
+[Chunk Text] | [Summarize Image]  <-- Vision LLM
+     |       |      |
+     |       +------+
+     |              |
+     v              v
+[Embed Chunks & Summaries]
+     |
+     v
+[Vector Store (FAISS)]<--+
+     |                    |
+[User Query] -> [Retrieve Docs]
+     |
+     v
+[Retrieved Text & Images]
+     |
+     v
+[Generate Answer]      <-- (Vision LLM: GPT-4o, Gemini)
+     |
+     v
+   [Answer]
 ```
 
 ## 🚀 Getting Started
@@ -158,6 +155,18 @@ For a more visual experience, launch the Streamlit app.
 streamlit run examples/streamlit_demo.py
 ```
 This will open the demo in your web browser.
+
+**c. Multimodal RAG Example:**
+
+To test the multimodal capabilities, first enable it in `examples/config.yaml`:
+```yaml
+multimodal:
+  enabled: true
+```
+Then, run the multimodal example script. This will use both the sample text document and the sample image.
+```bash
+python examples/multimodal_rag.py
+```
 
 ## ⚙️ Advanced Usage
 

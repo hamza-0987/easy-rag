@@ -14,7 +14,7 @@ setup(
         "faiss-cpu",
         "pypdf",
         "tiktoken",
-        "sentence-transformers",
+        "Pillow",
         "pyyaml",
         "python-dotenv",
         "streamlit",

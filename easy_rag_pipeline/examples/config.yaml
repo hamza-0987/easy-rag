@@ -51,6 +51,16 @@ retrieval:
   k: 5 # Number of documents to retrieve
 
 
+# --- Multimodal Settings ---
+# Settings for processing images and text together.
+multimodal:
+  enabled: false
+  # The model used to generate text summaries of images.
+  image_summarize_model: "gpt-4o-mini"
+  # The model used to generate embeddings for images.
+  image_embed_model: "text-embedding-3-small" # Example, OpenAI's model can handle this.
+
+
 # --- API keys ---
 # API keys are loaded automatically from environment variables based on the provider selected.
 # See .env.example for the required variable names.

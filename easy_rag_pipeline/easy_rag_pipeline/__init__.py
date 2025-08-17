@@ -7,7 +7,7 @@ A reusable and configurable RAG (Retrieval-Augmented Generation) pipeline.
 __version__ = "0.1.0"
 
 from .config import load_config
-from .pipeline import create_and_persist_vector_store, query_rag_pipeline, simple_rag_pipeline
+from .pipeline import create_and_persist_vector_store, query_rag_pipeline, simple_rag_pipeline, multimodal_rag_pipeline
 from .utils import setup_logging
 
 # This makes it easy for users to import the main functions directly from the package
@@ -17,5 +17,6 @@ __all__ = [
     "create_and_persist_vector_store",
     "query_rag_pipeline",
     "simple_rag_pipeline",
+    "multimodal_rag_pipeline",
     "setup_logging",
 ]

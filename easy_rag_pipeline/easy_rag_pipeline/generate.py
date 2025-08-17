@@ -73,3 +73,39 @@ def generate_answer(query: str, docs: list, llm_config: dict):
         "context": context,
         "question": query
     })
+
+
+def generate_multimodal_answer(query: str, docs: list, llm_config: dict):
+    """
+    Generates an answer using a vision-capable LLM based on a multimodal context
+    (text and images).
+    """
+    provider = llm_config.get("provider", "openai").lower()
+
+    if provider not in ["openai", "gemini"]:
+        raise ValueError(f"Provider '{provider}' does not support multimodal generation in this implementation.")
+
+    llm = ChatOpenAI(
+        model=llm_config.get("model", "gpt-4o-mini"),
+        api_key=llm_config.get("api_key"),
+        temperature=llm_config.get("temperature", 0.7)
+    )
+
+    # Construct the multimodal message payload
+    message_content = [{"type": "text", "text": f"Use the following context to answer the question. Question: {query}\n\n--- Context ---"}]
+
+    for doc in docs:
+        if doc.metadata.get("type") == "image":
+            message_content.append({
+                "type": "image_url",
+                "image_url": f"data:{doc.metadata['mime_type']};base64,{doc.page_content}"
+            })
+        else:
+            message_content.append({
+                "type": "text",
+                "text": doc.page_content
+            })
+
+    # Invoke the model with the combined text and image context
+    response = llm.invoke(message_content)
+    return response.content
